@@ -31,6 +31,7 @@ signed main()
     {
         for (int i = 0; i < m; i++)
         {
+            if (store[i] > house[0] && abs(store[i] - house[0]) > badness[0]) break;
             if (abs(store[i] - house[0]) + price[i] <= badness[0])
             {
                 badness[0] = abs(store[i] - house[0]) + price[i];
@@ -41,18 +42,20 @@ signed main()
     /* such nice subcases, telling us to remember the case when everything is to the right. idk if it will fail because of that, but such nice people they are... */
     for (int i = 1; i < n; i++)
     {
+        best_store[i] = best_store[i-1];
         badness[i] = abs(store[best_store[i]] - house[i]) + price[best_store[i]];
         /* bounds check? */
-        for (int j = best_store[i-1] + 1; j < m; j++)
+        for (int j = best_store[i] + 1; j < m; j++)
         {
             /* min dist check with min price here for optimisation if needed */
             /* if it literally can't be any better */
-            if (abs(store[j] - house[i]) > badness[i]) break;
+            if (store[j] > house[i] && abs(store[j] - house[i]) > badness[i]) break;
  
             /* if equivalent, use the further one because more likely to be best for next house */
             if (abs(store[j] - house[i]) + price[j] <= badness[i])
             {
                 badness[i] = abs(store[j] - house[i]) + price[j];
+                best_store[i] = j;
             }
         }
     }
